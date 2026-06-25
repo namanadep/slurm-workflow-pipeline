@@ -11,7 +11,7 @@ sbatch step1  ──afterok──▶  sbatch step2  ──afterok──▶  sbat
    data points)                features)                  report)
 ```
 
-If step 1 fails, Slurm automatically marks steps 2 and 3 as `DependencyNeverSatisfied` and they never run — no wasted resources.
+If step 1 fails, Slurm automatically marks steps 2 and 3 as `DependencyNeverSatisfied` and they never run - no wasted resources.
 
 ## Files
 
@@ -29,7 +29,7 @@ steps/
 bash submit_pipeline.sh /path/to/workdir
 ```
 
-### Submission output — job chain
+### Submission output - job chain
 
 ![Pipeline submission showing jobs 24→25→26 chained with afterok](screenshots/09_pipeline_submit.png)
 
@@ -41,24 +41,24 @@ JOB2=$(sbatch --dependency=afterok:$JOB1 step2.sh | awk '{print $NF}')
 JOB3=$(sbatch --dependency=afterok:$JOB2 step3.sh | awk '{print $NF}')
 ```
 
-- `afterok:JOBID` — start only if JOBID exited with code 0
-- `afterany:JOBID` — start regardless of exit code
-- `afternotok:JOBID` — start only if JOBID failed (useful for error-handling jobs)
+- `afterok:JOBID` - start only if JOBID exited with code 0
+- `afterany:JOBID` - start regardless of exit code
+- `afternotok:JOBID` - start only if JOBID failed (useful for error-handling jobs)
 - Multiple deps: `--dependency=afterok:1:2:3` (all must succeed)
 
 ### Queue showing dependency states
 
 ![squeue showing pending jobs with afterok dependency annotations](screenshots/10_pipeline_queue.png)
 
-The `(failed)` annotation on a dependency tells you exactly *why* a downstream job is stuck — here an earlier run failed so jobs 16/17 were never going to run.
+The `(failed)` annotation on a dependency tells you exactly *why* a downstream job is stuck - here an earlier run failed so jobs 16/17 were never going to run.
 
 ## Pipeline results
 
-### sacct — all 3 steps completed
+### sacct - all 3 steps completed
 
 ![sacct showing wf_generate, wf_process, wf_aggregate all COMPLETED 0:0](screenshots/11_pipeline_sacct.png)
 
-### Step 3 output — final aggregation report
+### Step 3 output - final aggregation report
 
 ![Aggregate step output showing statistical summary of 10,000 records](screenshots/12_pipeline_output.png)
 
@@ -69,7 +69,7 @@ The pipeline processed 10,000 points and produced:
 
 ## Extending the pipeline
 
-**Fan-out (parallel steps):** Submit multiple step-2 variants with the same `afterok:$JOB1` dependency — they all start once step 1 completes and run concurrently.
+**Fan-out (parallel steps):** Submit multiple step-2 variants with the same `afterok:$JOB1` dependency - they all start once step 1 completes and run concurrently.
 
 **Fan-in (barrier):** Use `afterok:$JOB2A:$JOB2B` to wait for multiple parallel jobs before running the final aggregation.
 

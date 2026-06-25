@@ -27,14 +27,14 @@ JOB2=$(sbatch --dependency=afterok:$JOB1 \
               --chdir="$WORKDIR" \
               --export=ALL,SLURM_SUBMIT_DIR="$WORKDIR" \
               "$STEPS_DIR/02_process_data.sh" | awk '{print $NF}')
-echo "Step 2 submitted: Job $JOB2 (wf_process) — depends on $JOB1"
+echo "Step 2 submitted: Job $JOB2 (wf_process) - depends on $JOB1"
 
 # Step 3: runs only if step 2 succeeded
 JOB3=$(sbatch --dependency=afterok:$JOB2 \
               --chdir="$WORKDIR" \
               --export=ALL,SLURM_SUBMIT_DIR="$WORKDIR" \
               "$STEPS_DIR/03_aggregate.sh" | awk '{print $NF}')
-echo "Step 3 submitted: Job $JOB3 (wf_aggregate) — depends on $JOB2"
+echo "Step 3 submitted: Job $JOB3 (wf_aggregate) - depends on $JOB2"
 
 echo ""
 echo "========================================"
